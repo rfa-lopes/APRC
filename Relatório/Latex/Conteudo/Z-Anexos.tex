@@ -1,0 +1,628 @@
+\appendix
+\chapter{A1-Anexos}
+\begin{lstlisting}
+import csv
+
+def a1(input_file_path):
+
+    protocols_bytes = {}
+    protocols_packets = {}
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                protocol = row[7]
+                packets = row[9]
+                bytes_ = row[10]
+
+                if (protocol not in protocols_bytes 
+                    or protocol not in protocols_packets):
+                    
+                    # print("[+] New protocol found: " + str(protocol))
+                    protocols_bytes[str(protocol)] = int(0)
+                    protocols_packets[str(protocol)] = int(0)
+
+                protocols_bytes[str(protocol)] += int(bytes_)
+                protocols_packets[str(protocol)] += int(packets)
+            line_count += 1
+    print(f"[*] Processed {line_count} lines")
+    print("\n=====RESULT======")
+    print("By Bytes:")
+    print(protocols_bytes)
+    print("\nBy Packets:")
+    print(protocols_packets)
+    print("===================")
+    print("\n\n")
+
+def main():
+    print("\n\n")
+    print(
+        "[Compute the total number of packets and bytes (in and out) per"
+        +" protocol (TCP, UDP, ICMP, …) contained in the flows.]\n"
+    )
+    a1("Enunciado/www.fct.unl.pt.csv")
+    a1("Enunciado/bigFlows.csv")
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+
+\chapter{A2-Anexos}
+\begin{lstlisting}
+import csv
+
+
+def a2(input_file_path):
+
+    ip_addrs = {}
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                source_address = str(row[3])
+                destination_address = str(row[4])
+
+                if isExternalAddress(input_file_path, source_address):
+                    if source_address not in ip_addrs:
+                        # print("[+] New ip addr found: " + source_address)
+                        ip_addrs[source_address] = int(0)
+                    ip_addrs[source_address] += int(1)
+
+                if isExternalAddress(input_file_path, destination_address):
+                    if destination_address not in ip_addrs:
+                        # print("[+] New ip addr found: " 
+                        #+ destination_address)
+                        ip_addrs[destination_address] = int(0)
+                    ip_addrs[destination_address] += int(1)
+            line_count += 1
+    print(f"[*] Processed {line_count} lines.")
+    print("\n======RESULT=============")
+    print(sorted(ip_addrs.items(), key=lambda x: x[1], reverse=True)[0:50])
+    print("===========================")
+    print("\n\n")
+
+
+def isExternalAddress(file, address):
+    if file == "Enunciado/www.fct.unl.pt.csv":
+        if address != "193.136.126.43" and address.split(".")[0] != "10":
+            return True
+
+    if file == "Enunciado/bigFlows.csv":
+        addr_split = address.split(".")
+        if addr_split[0] != "172" and (
+            addr_split[1] != "16" or addr_split[1] != "31"):
+            return True
+    return False
+
+
+def main():
+
+    print("\n\n")
+    print(
+        "[Determine the 50 most popular IP addresses external"
+        + " to the domain by number of flows..]\n"
+    )
+    a2("Enunciado/www.fct.unl.pt.csv")
+    a2("Enunciado/bigFlows.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\chapter{A3-Anexos}
+\begin{lstlisting}
+import csv
+
+
+def a3(input_file_path):
+
+    ip_addrs = {}
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                source_address = str(row[3])
+                destination_address = str(row[4])
+                bytes_ = int(row[10])
+
+                if isExternalAddress(input_file_path, source_address):
+                    if source_address not in ip_addrs:
+                        # print("[+] New ip addr found: " + source_address)
+                        ip_addrs[source_address] = 0
+                    ip_addrs[source_address] += bytes_
+
+                if isExternalAddress(input_file_path, destination_address):
+                    if destination_address not in ip_addrs:
+                        # print("[+] New ip addr found: "
+                        #+ destination_address)
+                        ip_addrs[destination_address] = 0
+                    ip_addrs[destination_address] += bytes_
+            line_count += 1
+    print(f"[*] Processed {line_count} lines.")
+    print("\n========RESULT=============")
+    print(sorted(ip_addrs.items(), key=lambda x: x[1], reverse=True)[0:50])
+    print("=============================")
+    print("\n\n")
+
+
+def isExternalAddress(file, address):
+    if file == "Enunciado/www.fct.unl.pt.csv":
+        if address != "193.136.126.43" and address.split(".")[0] != "10":
+            return True
+
+    if file == "Enunciado/bigFlows.csv":
+        addr_split = address.split(".")
+        if addr_split[0] != "172" and (
+            addr_split[1] != "16" or addr_split[1] != "31"):
+            return True
+    return False
+
+
+def main():
+    print("\n\n")
+    print(
+        "[Determine the 50 most popular IP addresses external"
+        + " to the domain by number of bytes.]\n"
+    )
+    a3("Enunciado/www.fct.unl.pt.csv")
+    a3("Enunciado/bigFlows.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\chapter{A4-Anexos}
+\begin{lstlisting}
+import csv
+import pandas as pd
+
+
+def a4(input_file_path, port_dic):
+
+    ports_usage_flows = {}
+    ports_usage_packets = {}
+
+    def init_or_insert_variables(port, nr_packets):
+        if port not in ports_usage_flows or port not in ports_usage_packets:
+            # print("[+] New port found: " + source_port)
+            ports_usage_flows[port] = 0
+            ports_usage_packets[port] = 0
+
+        ports_usage_flows[port] += 1
+        ports_usage_packets[port] += nr_packets
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                source_port = int(row[5])
+                destination_port = int(row[6])
+
+                packets = int(row[9])
+
+                init_or_insert_variables(source_port, packets)
+                init_or_insert_variables(destination_port, packets)
+
+            line_count += 1
+    print(f"[*] Processed {line_count} lines.")
+
+    dataFlows = sort_to_key_value(
+        convertPortNumbers(ports_usage_flows, port_dic))
+    dataPackets = sort_to_key_value(
+        convertPortNumbers(ports_usage_packets, port_dic))
+
+    print("\n======RESULT=========")
+    print("By Flows:")
+    print(pd.DataFrame(dataFlows.items(), columns=["Port", "Flows"]))
+
+    print("\nBy Packets:")
+    print(pd.DataFrame(dataPackets.items(), columns=["Port", "Packets"]))
+    print("======================")
+    print("\n\n")
+
+
+def sort_to_key_value(data):
+    return {
+        k: v
+        for k, v in sorted(data.items(), 
+            key=lambda item: item[1], reverse=True)[0:50]
+    }
+
+
+def convertPortNumbers(data, port_dic):
+    for i in port_dic.keys():
+        value = port_dic[i]
+        if value == "":
+            value = i
+        try:
+            port_n = int(i)
+            if port_n in data:
+                data[value + "(" + str(port_n) + ")"] = data.pop(port_n)
+        except ValueError:
+            continue
+    return data
+
+
+def getPortNamesFromFile():
+    dic = {}
+    with open("Utils/service-names-port-numbers.csv", mode="r") as infile:
+        reader = csv.reader(infile)
+        line = 0
+        for rows in reader:
+            if line != 0:
+                dic[rows[1]] = rows[0]
+            line += 1
+    return dic
+
+
+def main():
+    print("\n\n")
+    print(
+        "[What are the top 50 (or less if their variety "
+        + "is smaller) most popular "
+        + "applications used by the computers in the domain?]\n"
+    )
+    # Only for the bigFlows.csv file:
+    a4("Enunciado/bigFlows.csv", getPortNamesFromFile())
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\chapter{A5-Anexos}
+\begin{lstlisting}
+import csv
+
+
+def a5(input_file_path):
+
+    count_tcp = 0
+    count_conections = 0
+
+    line1 = {}
+    line2 = {}
+    tmp = 0
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                protocol = str(row[7])
+                if protocol == "TCP":
+                    if tmp == 0:
+                        line1 = row
+                        tmp = 1
+                    else:
+                        line2 = row
+
+                        src_addr1 = str(line1[3])
+                        dest_addr1 = str(line1[4])
+                        src_port1 = int(line1[5])
+                        dest_port1 = int(line1[6])
+                        flags1 = str(line1[8])
+
+                        src_addr2 = str(line2[3])
+                        dest_addr2 = str(line2[4])
+                        src_port2 = int(line2[5])
+                        dest_port2 = int(line2[6])
+                        flags2 = str(line2[8])
+
+                        if (
+                            src_addr1 == dest_addr2
+                            and dest_addr1 == src_addr2
+                            and src_port1 == dest_port2
+                            and dest_port1 == src_port2
+                        ):
+                            count_tcp += 1
+                            if (
+                                "S" in flags1
+                                and "F" in flags1
+                                and "A" in flags1
+                                and "S" in flags2
+                                and "F" in flags2
+                                and "A" in flags2
+                            ):
+                                count_conections += 1
+                            tmp = 0
+                        else:
+                            line1 = row
+                            tmp = 1
+            line_count += 1
+    print(f"[*] Processed {line_count} lines")
+    print("\n============RESULT================")
+    print("Conexões TCP (all): " + str(count_tcp))
+    print("Conexões TCP (started and finished): " + str(count_conections))
+    print("====================================")
+    print("\n\n")
+
+
+def main():
+    print("\n\n")
+    print(
+        "[Aggregate the two flows representing the same TCP"
+        + " connection; count the total number of TCP connections "
+        + "collected, and the total number of TCP connections "
+        + "that started and finished correctly (the ones where flags show "
+        + "that the connection has been opened, used, and finalized "
+        + "by both sides). Explain the several possible technical reasons"
+        + " that justify why there are TCP connections that were "
+        + "not started or ended correctly.]\n"
+    )
+    a5("Enunciado/www.fct.unl.pt.csv")
+    a5("Enunciado/bigFlows.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\chapter{B1-Anexos}
+\begin{lstlisting}
+import csv
+from datetime import datetime
+from datetime import timedelta
+import matplotlib.pyplot as plt
+
+
+def b1(input_file_path):
+
+    chart_by_time_in = {}
+    chart_by_time_out = {}
+
+    start_time = ""
+    counter = 0
+
+    timeFrame = getTimeFrameInSecound(input_file_path)
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        csv_line = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                start_time_ = str(row[0])  # time start
+                end_time_ = str(row[1])  # time end
+
+                if line_count == 1:
+                    start_time = start_time_
+
+                time = getTimeDiffInSecound(start_time, start_time_)
+                if time >= timeFrame:
+                    counter += 1
+                    start_time = start_time_
+
+                source_addr = str(row[3])
+                dest_addr = str(row[4])
+                bytes_ = int(row[10])
+
+                if (counter not in chart_by_time_out 
+                    or counter not in chart_by_time_in):
+                    chart_by_time_out[counter] = 0
+                    chart_by_time_in[counter] = 0
+
+                if isExternalAddress(input_file_path, source_addr):
+                    chart_by_time_out[counter] += bytes_
+
+                if isExternalAddress(input_file_path, dest_addr):
+                    chart_by_time_in[counter] += bytes_
+
+            line_count += 1
+    print(f"[*] Processed {line_count} lines from file: " + input_file_path)
+
+    print("\n=========RESULT================")
+    print("IN: " + str(chart_by_time_in))
+    getGraph(chart_by_time_in)
+    print("\nOUT: " + str(chart_by_time_out))
+    getGraph(chart_by_time_out)
+    print("=================================")
+    print("\n\n")
+
+
+def getGraph(data):
+    keys = data.keys()
+    values = data.values()
+    plt.bar(keys, values)
+    plt.show()
+
+
+def getTimeDiffInSecound(start, to):
+    # 28/04/2020  15:44:38
+    fmt = "%Y-%m-%d %H:%M:%S"
+    d1 = datetime.strptime(start, fmt)
+    d2 = datetime.strptime(to, fmt)
+    diff = d2 - d1
+    return int(diff.total_seconds())
+
+
+def getTimeFrameInSecound(file):
+    if file == "Enunciado/www.fct.unl.pt.csv":
+        return 60
+    if file == "Enunciado/bigFlows.csv":
+        return 5
+
+
+def isExternalAddress(file, address):
+    if file == "Enunciado/www.fct.unl.pt.csv":
+        if address != "193.136.126.43" and address.split(".")[0] != "10":
+            return True
+
+    if file == "Enunciado/bigFlows.csv":
+        addr_split = address.split(".")
+        if (addr_split[0] != "172" and 
+            (addr_split[1] != "16" or addr_split[1] != "31")):
+            return True
+    return False
+
+
+def main():
+    print("\n\n")
+    print(
+        "[Option 1: Provide two charts representing the "
+        + "average bit rate per time unit that "
+        + "crossed the interface or the router in and out "
+        + "during the collecting period. The "
+        + "resolution of these charts in the horizontal axe "
+        + "(time) should contain at least 60 "
+        + "bars, or values. Thus, if the collection period is "
+        + "1 hour, each bar represents at most "
+        + "1 minute. If the collection period is 5 minutes, each "
+        + "bar represents at most 5 seconds.]\n"
+    )
+    b1("Enunciado/www.fct.unl.pt.csv")
+    b1("Enunciado/bigFlows.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}
+
+\chapter{B2-Anexos}
+\begin{lstlisting}
+import csv
+from IPGeolocation import IPGeolocationAPI
+from IPGeolocation import GeolocationParams
+import matplotlib.pyplot as plt
+
+
+def b2(input_file_path):
+
+    ip_addrs = {}
+
+    with open(input_file_path) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=",")
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("[*] File: " + input_file_path)
+            else:
+                source_address = str(row[3])
+                destination_address = str(row[4])
+                bytes_ = int(row[10])
+
+                if isExternalAddress(input_file_path, source_address):
+                    if source_address not in ip_addrs:
+                        # print("[+] New ip addr found: " + source_address)
+                        ip_addrs[source_address] = int(0)
+                    ip_addrs[source_address] += bytes_
+
+                if isExternalAddress(input_file_path, destination_address):
+                    if destination_address not in ip_addrs:
+                        # print("[+] New ip addr found: " 
+                        # + destination_address)
+                        ip_addrs[destination_address] = int(0)
+                    ip_addrs[destination_address] += bytes_
+
+            line_count += 1
+
+    sorted_list = sorted(ip_addrs.items(), 
+        key=lambda x: x[1], reverse=True)[0:50]
+    ips_addrs = []
+    for ip_bytes in sorted_list:
+        ips_addrs.append(ip_bytes[0])
+    print(f"[*] Processed {line_count} lines from file: " + input_file_path)
+    print("\n================RESULT==============")
+    data = getGeoLocation(ips_addrs)
+    print(str(data))
+    getGraph(data)
+    print("=====================================")
+    print("\n\n")
+
+
+def isExternalAddress(file, address):
+    if file == "Enunciado/www.fct.unl.pt.csv":
+        if address != "193.136.126.43" and address.split(".")[0] != "10":
+            return True
+
+    if file == "Enunciado/bigFlows.csv":
+        addr_split = address.split(".")
+        if (addr_split[0] != "172" 
+            and (addr_split[1] != "16" or addr_split[1] != "31")):
+            return True
+    return False
+
+
+def getGraph(data):
+    keys = data.keys()
+    values = data.values()
+    plt.bar(keys, values)
+    plt.show()
+
+
+def getGeoLocation(ips_addrs):
+    key1 = "2b86ff119e424fb1b83352f12b1344aa"
+    key2 = "dad4b6d19dd04b05a5becebc78404901"
+    ipgeolocationApi = IPGeolocationAPI(key2)
+
+    ip_geo_location = {}
+    i = 0
+
+    for ip in ips_addrs:
+        geolocation = ipgeolocationApi.getGeolocation()
+        geolocationParams = GeolocationParams()
+        geolocationParams.setIPAddress(ip)
+        geolocation = ipgeolocationApi.getGeolocation(geolocationParams)
+        country_name = geolocation["country_name"]
+
+        if country_name not in ip_geo_location:
+            ip_geo_location[country_name] = int(0)
+
+        ip_geo_location[country_name] += int(1)
+
+        print("                               ", end="\r")
+        print("[" + str(i) + "]" + country_name, end="\r")
+        i += 1
+
+    sorted_list = {
+        k: v
+        for k, v in sorted(
+            ip_geo_location.items(), key=lambda item: item[1], reverse=True
+        )
+    }
+    return sorted_list
+
+
+def main():
+    print("\n\n")
+    print(
+        "[Option 2: Consider the two files and represent in a 2D chart the"
+        + " geographic position of the IP addresses outside the domain"
+        + " computed in a.3.]\n"
+    )
+    b2("Enunciado/www.fct.unl.pt.csv")
+    b2("Enunciado/bigFlows.csv")
+
+
+if __name__ == "__main__":
+    main()
+
+\end{lstlisting}

@@ -17,12 +17,12 @@
 ### Como correr
 
 * a1 - python3 [a1.py](a1.py)
-* a2 - python3 [a2.py](a1.py)
-* a3 - python3 [a3.py](a1.py)
-* a4 - python3 [a4.py](a1.py)
-* a5 - python3 [a5.py](a1.py)
-* b1 - python3 [b1.py](a1.py)
-* b2 - python3 [b2.py](a1.py)
+* a2 - python3 [a2.py](a2.py)
+* a3 - python3 [a3.py](a3.py)
+* a4 - python3 [a4.py](a4.py)
+* a5 - python3 [a5.py](a5.py)
+* b1 - python3 [b1.py](b1.py)
+* b2 - python3 [b2.py](b2.py)
 
 ---
 
